@@ -127,3 +127,21 @@ async def filterFilmsByParameters(films_filter: Film) -> List[dict]:
 async def addUser(user: User) -> User:
     users.append(user.dict())
     return user
+
+@app.delete("/users/{user_id}")
+async def deleteUser(user_id: int) -> User:
+    for user in users:
+        if user["id"] == user_id:
+            users.remove(user)
+            return user
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+@app.put("/users/{user_id}")
+async def updateUser(user_id: int, user: User) -> User:
+    for u in users:
+        if u["id"] == user_id:
+            u["name"] = user.name
+            u["age"] = user.age
+            return u
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
